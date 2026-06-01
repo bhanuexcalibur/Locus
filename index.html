@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locus × Bhanu Kumar · Proof of Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:    #0b0c0f;
+  --bg2:   #111318;
+  --bg3:   #171a20;
+  --bg4:   #1e2128;
+  --line:  rgba(255,255,255,0.07);
+  --line2: rgba(255,255,255,0.12);
+  --w:     #f0f2f5;
+  --w2:    #a8b0bc;
+  --w3:    #5a6270;
+  --acc:   #4f8ef7;
+  --acc2:  #3a6fd8;
+  --acc-d: rgba(79,142,247,0.12);
+  --acc-g: rgba(79,142,247,0.06);
+  --grn:   #30c97e;
+  --grn-d: rgba(48,201,126,0.1);
+  --amb:   #f5a623;
+  --amb-d: rgba(245,166,35,0.1);
+  --red:   #e85555;
+  --red-d: rgba(232,85,85,0.1);
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:60px;}
+body{
+  background:var(--bg);
+  color:var(--w);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--acc2);border-radius:2px;}
+
+/* READING BAR */
+.rbar{position:fixed;top:0;left:0;height:2px;background:var(--acc);z-index:600;width:0;transition:width .08s linear;}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(11,12,15,0.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+  padding:0 5vw;
+}
+.nav-i{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:58px;gap:16px;
+}
+.nav-logo{
+  font-family:'DM Mono',monospace;font-size:11.5px;
+  color:var(--w2);letter-spacing:0.03em;white-space:nowrap;flex-shrink:0;
+}
+.nav-logo .x{color:var(--w3);margin:0 8px;}
+.nav-logo .locus{color:var(--acc);}
+.nav-links{display:flex;gap:2px;flex-wrap:wrap;}
+.nl{
+  font-size:11px;font-weight:500;padding:5px 13px;letter-spacing:0.02em;
+  border-radius:5px;border:1px solid transparent;
+  color:var(--w3);background:transparent;
+  text-decoration:none;transition:all .14s;white-space:nowrap;
+}
+.nl:hover{color:var(--w2);border-color:var(--line2);background:var(--bg3);}
+.nl.cta{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600;}
+.nl.cta:hover{background:var(--acc2);border-color:var(--acc2);}
+
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;flex-shrink:0;}
+.hbg span{display:block;width:20px;height:1.5px;background:var(--w2);border-radius:2px;transition:transform .28s,opacity .28s;}
+.hbg.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.hbg.open span:nth-child(2){opacity:0;}
+.hbg.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+.mob-menu{
+  display:none;position:fixed;inset:0;top:58px;
+  background:var(--bg);z-index:190;
+  flex-direction:column;padding:32px 5vw;
+  border-top:1px solid var(--line);
+}
+.mob-menu.open{display:flex;}
+.mob-menu a{
+  display:block;font-family:'Bebas Neue',sans-serif;
+  font-size:26px;font-weight:400;letter-spacing:0.04em;
+  color:var(--w);text-decoration:none;
+  padding:18px 0;border-bottom:1px solid var(--line);
+}
+.mob-menu a.cta-m{color:var(--acc);border-bottom:none;}
+@media(max-width:780px){.nav-links{display:none;}.hbg{display:flex;}}
+
+/* LAYOUT */
+.wrap{max-width:1200px;margin:0 auto;padding:0 5vw;}
+section{padding:84px 0;border-bottom:1px solid var(--line);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ===================== HERO ===================== */
+.hero{
+  padding:100px 5vw 80px;
+  max-width:1200px;margin:0 auto;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid var(--line);
+}
+
+/* grid texture */
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(79,142,247,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(79,142,247,0.03) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 60% at 60% 40%,black 0%,transparent 70%);
+}
+.hero-glow{
+  position:absolute;top:-120px;right:-80px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(79,142,247,0.08) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-glow2{
+  position:absolute;bottom:-160px;left:10%;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(48,201,126,0.05) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+.h-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10.5px;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--w3);margin-bottom:28px;display:flex;align-items:center;gap:10px;
+}
+.h-eyebrow::before{
+  content:'';display:block;width:28px;height:1px;background:var(--acc);flex-shrink:0;
+}
+
+.h-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(54px,9vw,110px);
+  font-weight:400;line-height:0.92;
+  letter-spacing:0.02em;
+  margin-bottom:32px;position:relative;z-index:1;
+}
+.h-title .line1{display:block;color:var(--w);}
+.h-title .line2{display:block;color:var(--acc);}
+.h-title .line3{
+  display:block;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,0.12);
+}
+
+.h-stats{
+  display:flex;flex-wrap:wrap;gap:0;
+  margin-top:56px;
+  border:1px solid var(--line);
+  border-radius:8px;overflow:hidden;
+  position:relative;z-index:1;
+  max-width:640px;
+}
+.h-stat{
+  flex:1;min-width:120px;
+  padding:20px 24px;
+  border-right:1px solid var(--line);
+  background:var(--bg2);
+}
+.h-stat:last-child{border-right:none;}
+.h-stat-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(26px,3.5vw,36px);
+  font-weight:400;line-height:1;letter-spacing:0.03em;
+  color:var(--w);margin-bottom:4px;
+}
+.h-stat-n .acc{color:var(--acc);}
+.h-stat-l{font-size:11px;color:var(--w3);letter-spacing:0.02em;font-family:'DM Mono',monospace;}
+
+/* ===================== SECTION HEADERS ===================== */
+.s-head{margin-bottom:52px;}
+.s-num{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--w3);display:block;margin-bottom:10px;
+}
+.s-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,58px);
+  font-weight:400;line-height:1.0;
+  letter-spacing:0.02em;color:var(--w);
+}
+.s-title .a{color:var(--acc);}
+.s-rule{width:32px;height:2px;background:var(--acc);margin-top:14px;}
+.s-sub{
+  font-size:14.5px;color:var(--w2);line-height:1.78;
+  max-width:620px;margin-top:14px;
+}
+
+/* ===================== SECTION 01: NARRATIVE ===================== */
+.narr-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:3px;
+  background:var(--line);border:1px solid var(--line);border-radius:8px;
+  overflow:hidden;
+}
+@media(max-width:720px){.narr-grid{grid-template-columns:1fr;}}
+.narr-cell{background:var(--bg2);padding:32px 28px;}
+.narr-cell h3{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;
+  color:var(--w2);margin-bottom:14px;letter-spacing:0.01em;
+}
+.narr-cell h3.acc{color:var(--acc);}
+.narr-cell p{font-size:13.5px;color:var(--w2);line-height:1.76;}
+.narr-cell p strong{color:var(--w);}
+.narr-cell ul{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:9px;}
+.narr-cell ul li{
+  font-size:13px;color:var(--w2);
+  display:flex;align-items:flex-start;gap:10px;line-height:1.6;
+}
+.narr-cell ul li::before{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:var(--acc);flex-shrink:0;margin-top:8px;
+}
+.narr-full{grid-column:1/-1;}
+.narr-tag{
+  display:inline-block;font-family:'DM Mono',monospace;
+  font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;
+  background:var(--acc-d);color:var(--acc);
+  border:1px solid rgba(79,142,247,0.2);
+  border-radius:4px;padding:4px 10px;margin-bottom:12px;
+}
+.narr-tag.grn{background:var(--grn-d);color:var(--grn);border-color:rgba(48,201,126,0.2);}
+.narr-tag.amb{background:var(--amb-d);color:var(--amb);border-color:rgba(245,166,35,0.2);}
+
+/* transition timeline */
+.tl{margin-top:36px;position:relative;padding-left:0;}
+.tl-row{
+  display:grid;grid-template-columns:1fr 40px 1fr;
+  gap:0;align-items:stretch;margin-bottom:3px;
+}
+.tl-left{
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:6px 0 0 6px;padding:20px 22px;
+}
+.tl-right{
+  background:var(--acc-d);border:1px solid rgba(79,142,247,0.15);
+  border-radius:0 6px 6px 0;padding:20px 22px;
+}
+.tl-center{
+  background:var(--bg2);display:flex;align-items:center;justify-content:center;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.tl-arrow{font-size:14px;color:var(--acc);font-weight:700;}
+.tl-label{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.tl-label.old{color:var(--w3);}
+.tl-label.new{color:var(--acc);}
+.tl-text{font-size:13px;color:var(--w2);line-height:1.6;}
+.tl-text strong{color:var(--w);}
+@media(max-width:640px){
+  .tl-row{grid-template-columns:1fr;}
+  .tl-center{display:none;}
+  .tl-left,.tl-right{border-radius:6px;}
+}
+
+/* ===================== SECTION 02: POSITIONING AUDIT ===================== */
+.audit-tabs{
+  display:flex;gap:0;
+  border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:32px;
+  flex-wrap:wrap;
+}
+.atab{
+  flex:1;padding:12px 16px;background:transparent;
+  border:none;cursor:pointer;font-family:'DM Mono',monospace;
+  font-size:11px;font-weight:500;color:var(--w3);
+  transition:all .14s;border-right:1px solid var(--line);
+  text-align:center;min-width:110px;letter-spacing:0.05em;text-transform:uppercase;
+}
+.atab:last-child{border-right:none;}
+.atab.on{background:var(--acc);color:#fff;}
+.atab:hover:not(.on){background:var(--bg3);}
+
+.apanel{display:none;}
+.apanel.on{display:block;}
+
+.audit-wrap{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:32px;
+}
+.audit-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+  margin-bottom:20px;
+}
+.audit-row:last-child{margin-bottom:0;}
+@media(max-width:680px){.audit-row{grid-template-columns:1fr;}}
+
+.abox{
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:8px;padding:22px;
+}
+.abox-lbl{
+  font-family:'DM Mono',monospace;font-size:9.5px;
+  letter-spacing:0.14em;text-transform:uppercase;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.dot-red{background:#e85555;}
+.dot-grn{background:#30c97e;}
+.dot-acc{background:var(--acc);}
+.dot-amb{background:#f5a623;}
+.abox-lbl.red{color:#e85555;}
+.abox-lbl.grn{color:#30c97e;}
+.abox-lbl.acc{color:var(--acc);}
+.abox-lbl.amb{color:#f5a623;}
+.abox h4{font-size:13.5px;font-weight:600;color:var(--w);margin-bottom:7px;line-height:1.4;}
+.abox p{font-size:12.5px;color:var(--w2);line-height:1.7;}
+.abox-fix{
+  background:rgba(79,142,247,0.06);border:1px solid rgba(79,142,247,0.15);
+  border-radius:8px;padding:22px;
+}
+.abox-fix .abox-lbl{color:var(--acc);}
+.abox-fix h4{color:var(--w);}
+.abox-ok{
+  background:var(--grn-d);border:1px solid rgba(48,201,126,0.18);
+  border-radius:8px;padding:22px;
+}
+.abox-ok .abox-lbl{color:var(--grn);}
+
+.verdict{
+  display:flex;align-items:flex-start;gap:14px;
+  border-top:1px solid var(--line);padding-top:22px;margin-top:22px;
+}
+.verdict-ic{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:14px;
+  background:var(--acc-d);color:var(--acc);
+}
+.verdict p{font-size:13px;color:var(--w2);line-height:1.72;}
+.verdict p strong{color:var(--w);}
+
+/* ===================== SECTION 03: GTM BRIEF ===================== */
+.gtm-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:720px){.gtm-grid{grid-template-columns:1fr;}}
+.gtm-card{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:26px;
+}
+.gtm-card.span2{grid-column:1/-1;}
+.gtm-card h3{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;
+  font-weight:700;color:var(--w);
+  margin-bottom:10px;line-height:1.3;
+}
+.gtm-card p{font-size:13.5px;color:var(--w2);line-height:1.72;}
+.gtm-card p strong{color:var(--w);}
+.gtm-card ul{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.gtm-card ul li{
+  font-size:13px;color:var(--w2);
+  display:flex;align-items:flex-start;gap:10px;line-height:1.6;
+}
+.gtm-card ul li::before{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:var(--acc);flex-shrink:0;margin-top:8px;
+}
+
+.gtm-phases{display:flex;flex-direction:column;gap:3px;margin-top:32px;}
+.ph{
+  display:grid;grid-template-columns:36px 1fr;
+  gap:0;align-items:stretch;
+}
+.ph-num{
+  background:var(--acc-d);border:1px solid rgba(79,142,247,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--acc);border-radius:6px 0 0 6px;font-weight:500;
+}
+.ph-body{
+  background:var(--bg2);border:1px solid var(--line);
+  border-left:none;border-radius:0 6px 6px 0;
+  padding:18px 22px;
+}
+.ph-label{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--acc);margin-bottom:6px;
+}
+.ph-title{font-size:14px;font-weight:600;color:var(--w);margin-bottom:6px;}
+.ph-text{font-size:12.5px;color:var(--w2);line-height:1.7;}
+.ph-text strong{color:var(--w);}
+
+/* ===================== SECTION 04: PERSONA SWITCHER ===================== */
+.persona-layout{
+  display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start;
+}
+@media(max-width:760px){.persona-layout{grid-template-columns:1fr;}}
+
+.ptabs{display:flex;flex-direction:column;gap:8px;}
+@media(max-width:760px){.ptabs{flex-direction:row;overflow-x:auto;gap:8px;padding-bottom:4px;}}
+
+.ptab{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:16px 18px;cursor:pointer;
+  transition:all .14s;flex-shrink:0;
+}
+.ptab.on{background:var(--bg3);border-color:var(--acc);}
+.ptab-role{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--w3);transition:color .14s;margin-bottom:4px;
+}
+.ptab.on .ptab-role{color:var(--acc);}
+.ptab-name{font-size:13.5px;font-weight:600;color:var(--w2);transition:color .14s;}
+.ptab.on .ptab-name{color:var(--w);}
+
+.p-content{display:none;}
+.p-content.on{display:block;}
+
+.p-card{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:30px;
+}
+.p-role-tag{
+  font-family:'DM Mono',monospace;font-size:9.5px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--acc);margin-bottom:14px;display:block;
+}
+.p-headline{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(18px,2.4vw,24px);font-weight:700;
+  color:var(--w);line-height:1.25;margin-bottom:16px;
+}
+.p-body-txt{font-size:13.5px;color:var(--w2);line-height:1.78;margin-bottom:20px;}
+.p-body-txt strong{color:var(--w);}
+.p-triggers{display:flex;flex-direction:column;gap:10px;}
+.p-trigger{
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:6px;padding:14px 16px;
+  font-size:13px;color:var(--w2);line-height:1.6;
+}
+.p-trigger strong{color:var(--w);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;}
+
+/* ===================== SECTION 05: COPY VAULT ===================== */
+.copy-tabs{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--line);overflow-x:auto;
+  margin-bottom:0;
+}
+.ctab{
+  padding:11px 18px;font-family:'DM Mono',monospace;
+  font-size:10.5px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--w3);cursor:pointer;border:none;background:none;
+  border-bottom:2px solid transparent;transition:all .16s;
+  white-space:nowrap;margin-bottom:-1px;
+}
+.ctab.on{color:var(--acc);border-bottom-color:var(--acc);}
+.ctab:hover:not(.on){color:var(--w2);}
+
+.cpanel{display:none;}
+.cpanel.on{display:block;}
+
+.copy-block{padding:28px 0;}
+.copy-ch{
+  font-family:'DM Mono',monospace;font-size:9.5px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--w3);margin-bottom:8px;
+}
+.copy-box{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:26px;margin-bottom:14px;
+  font-size:14px;color:var(--w);line-height:1.82;
+}
+.copy-box .email-head{
+  font-size:12px;color:var(--w3);padding-bottom:14px;margin-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.copy-box .email-head strong{color:var(--w2);}
+.copy-why{
+  background:rgba(79,142,247,0.05);border-left:2px solid var(--acc);
+  border-radius:0 6px 6px 0;padding:14px 18px;
+  font-size:12.5px;color:var(--w2);line-height:1.72;
+}
+.copy-why strong{color:var(--w);}
+.copy-cbadge{
+  display:inline-block;font-family:'DM Mono',monospace;
+  font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  border-radius:4px;padding:3px 9px;margin-bottom:12px;
+}
+.cbadge-web{background:var(--acc-d);color:var(--acc);}
+.cbadge-email{background:var(--grn-d);color:var(--grn);}
+.cbadge-sales{background:rgba(255,255,255,0.05);color:var(--w3);}
+
+/* ===================== SECTION 06: BATTLECARD ===================== */
+.bc-header{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-radius:8px 8px 0 0;overflow:hidden;
+}
+.bc-h{
+  padding:14px 18px;
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  background:var(--bg3);
+}
+.bc-h.them{color:#e85555;}
+.bc-h.us{color:#30c97e;}
+
+.bc-rows{border:1px solid var(--line);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;}
+.bc-row{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:1px;
+  background:var(--line);border-bottom:1px solid var(--line);
+}
+.bc-row:last-child{border-bottom:none;}
+.bc-cell{
+  background:var(--bg2);padding:16px 18px;
+  font-size:12.5px;color:var(--w2);line-height:1.6;
+}
+.bc-cell.topic{color:var(--w);font-weight:500;}
+.bc-cell.bad{color:#e85555;}
+.bc-cell.good{color:#30c97e;}
+.bc-cell strong{font-weight:600;}
+@media(max-width:640px){
+  .bc-header,.bc-rows{display:none;}
+  .bc-mobile{display:flex;flex-direction:column;gap:12px;}
+  .bc-mob-row{
+    background:var(--bg2);border:1px solid var(--line);
+    border-radius:8px;padding:18px;
+  }
+  .bc-mob-topic{
+    font-size:13px;font-weight:600;color:var(--w);
+    margin-bottom:10px;padding-bottom:10px;
+    border-bottom:1px solid var(--line);
+  }
+  .bc-mob-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .bc-mob-col{font-size:12px;}
+  .bc-mob-lbl{
+    font-family:'DM Mono',monospace;font-size:9px;
+    letter-spacing:0.1em;text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  .bc-mob-lbl.them{color:#e85555;}
+  .bc-mob-lbl.us{color:#30c97e;}
+  .bc-mob-val.bad{color:#e85555;}
+  .bc-mob-val.good{color:#30c97e;}
+  .bc-mob-val{color:var(--w2);}
+}
+@media(min-width:641px){.bc-mobile{display:none;}}
+
+/* ===================== OTHER WORK ===================== */
+.work-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.wcard{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;padding:22px;text-decoration:none;
+  display:flex;flex-direction:column;gap:8px;
+  transition:all .16s;
+}
+.wcard:hover{border-color:var(--line2);background:var(--bg3);transform:translateY(-2px);}
+.wcard-tag{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--w3);
+}
+.wcard h4{font-size:14px;font-weight:600;color:var(--w);}
+.wcard p{font-size:12.5px;color:var(--w2);line-height:1.6;flex:1;}
+.wcard-arr{font-size:16px;color:var(--acc);}
+
+/* ===================== FOOTER / SIG ===================== */
+.sig{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:28px;flex-wrap:wrap;
+  padding:56px 0;
+}
+.sig-left h2{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,38px);
+  font-weight:400;color:var(--w);line-height:1.1;
+  letter-spacing:0.04em;margin-bottom:6px;
+}
+.sig-left p{font-size:13.5px;color:var(--w2);}
+.sig-links{display:flex;flex-wrap:wrap;gap:10px;}
+.slink{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line2);border-radius:6px;
+  padding:9px 16px;text-decoration:none;
+  font-size:12px;font-weight:500;color:var(--w2);
+  background:var(--bg2);transition:all .14s;
+}
+.slink:hover{border-color:var(--acc);color:var(--acc);background:var(--acc-d);}
+.slink svg{width:14px;height:14px;flex-shrink:0;}
+
+.footer-bar{
+  border-top:1px solid var(--line);
+  padding:20px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.footer-bar span{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--w3);}
+.footer-bar a{color:var(--acc);text-decoration:none;}
+.footer-bar a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="rbar" id="rbar"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-i">
+    <span class="nav-logo">bhanu<span class="x">×</span><span class="locus">locus</span></span>
+    <div class="nav-links">
+      <a class="nl" href="#narrative">Narrative</a>
+      <a class="nl" href="#audit">Audit</a>
+      <a class="nl" href="#gtm">GTM</a>
+      <a class="nl" href="#personas">Personas</a>
+      <a class="nl" href="#copy">Copy</a>
+      <a class="nl" href="#battlecard">Battlecard</a>
+      <a class="nl" href="#work">Work</a>
+      <a class="nl cta" href="https://drive.google.com/file/d/1EJiU-EBOTcqAeIWRUUYy0Y5uw57KQtI9/view" target="_blank">Resume</a>
+    </div>
+    <button class="hbg" id="hbg" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mob-menu" id="mob-menu">
+  <a href="#narrative" onclick="closeMob()">Narrative</a>
+  <a href="#audit" onclick="closeMob()">Audit</a>
+  <a href="#gtm" onclick="closeMob()">GTM</a>
+  <a href="#personas" onclick="closeMob()">Personas</a>
+  <a href="#copy" onclick="closeMob()">Copy</a>
+  <a href="#battlecard" onclick="closeMob()">Battlecard</a>
+  <a href="#work" onclick="closeMob()">Work</a>
+  <a class="cta-m" href="https://drive.google.com/file/d/1EJiU-EBOTcqAeIWRUUYy0Y5uw57KQtI9/view" target="_blank">Resume</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <p class="h-eyebrow">Bhanu Kumar · Product Marketing</p>
+
+  <h1 class="h-title">
+    <span class="line1">Telling the</span>
+    <span class="line2">Agentic TMS</span>
+    <span class="line3">Story.</span>
+  </h1>
+
+  <div class="h-stats reveal">
+    <div class="h-stat">
+      <div class="h-stat-n">1.5<span class="acc">B+</span></div>
+      <div class="h-stat-l">deliveries optimised</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n">30<span class="acc">+</span></div>
+      <div class="h-stat-l">countries deployed</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n">$320<span class="acc">M</span></div>
+      <div class="h-stat-l">transit cost saved</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n">99.5<span class="acc">%</span></div>
+      <div class="h-stat-l">SLA adherence</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 01: NARRATIVE -->
+<section id="narrative">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">01 / The Transition Narrative</span>
+      <h2 class="s-title">From logistics software<br>to <span class="a">AI-native platform.</span></h2>
+      <div class="s-rule"></div>
+      <p class="s-sub">The real PMM challenge at Locus isn't writing good copy. It's helping enterprise buyers understand a category that didn't exist three years ago.</p>
+    </div>
+
+    <!-- Before/After table -->
+    <div class="reveal">
+      <div class="tl">
+        <div class="tl-row">
+          <div class="tl-left">
+            <div class="tl-label old">Locus was positioned as</div>
+            <div class="tl-text"><strong>A last-mile route optimization tool.</strong> Smart routing, delivery tracking, driver dispatch. Category: logistics SaaS. Buyers: ops managers buying point solutions.</div>
+          </div>
+          <div class="tl-center"><span class="tl-arrow">→</span></div>
+          <div class="tl-right">
+            <div class="tl-label new">Locus now needs to say</div>
+            <div class="tl-text"><strong>An Agentic TMS that spans planning, execution, and settlement.</strong> Category: AI-native logistics platform. Buyers: VP Supply Chain, CIO, Head of Logistics buying strategic infrastructure.</div>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-left">
+            <div class="tl-label old">Proof points looked like</div>
+            <div class="tl-text">Faster routes. Fewer failed deliveries. Driver app ratings.</div>
+          </div>
+          <div class="tl-center"><span class="tl-arrow">→</span></div>
+          <div class="tl-right">
+            <div class="tl-label new">Proof points need to be</div>
+            <div class="tl-text"><strong>12M+ automated decisions per day.</strong> 250+ real-world constraints. $320M verified cost savings. 99.5% SLA adherence at enterprise scale.</div>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-left">
+            <div class="tl-label old">Old narrative hook</div>
+            <div class="tl-text">"Optimize your last mile."</div>
+          </div>
+          <div class="tl-center"><span class="tl-arrow">→</span></div>
+          <div class="tl-right">
+            <div class="tl-label new">New narrative hook</div>
+            <div class="tl-text"><strong>"Your logistics network runs on decisions. Agentic TMS makes 12 million of them a day."</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Context cards -->
+    <div class="narr-grid reveal" style="margin-top:28px;">
+      <div class="narr-cell">
+        <div class="narr-tag">The Opportunity</div>
+        <h3>Why this transition matters now</h3>
+        <p>Ingka Group's acquisition in October 2025 isn't just a funding event. It's a credibility signal: IKEA runs arguably the world's most scrutinized home delivery operation, and they chose Locus. <strong>That proof point needs to be woven into every enterprise pitch.</strong></p>
+        <p style="margin-top:12px;">Meanwhile, the category is forming in real time. QKS named Locus a TMS leader in 2025. Gartner has flagged Locus for five consecutive years. The window to own "Agentic TMS" as a category is open, but won't stay open.</p>
+      </div>
+      <div class="narr-cell">
+        <div class="narr-tag amb">The PMM Gap</div>
+        <h3>What the story needs to do</h3>
+        <ul>
+          <li>Reframe Locus from "logistics tool" to "decision infrastructure" without confusing existing customers</li>
+          <li>Make agentic AI legible to supply chain buyers who are skeptical of AI hype but open to provable outcomes</li>
+          <li>Differentiate from Blue Yonder, Oracle TMS, SAP TM on architecture, not just features</li>
+          <li>Use the IKEA signal strategically, not just as a logo placement</li>
+          <li>Build a buyer-specific narrative for Head of Logistics vs. VP Supply Chain vs. CIO</li>
+        </ul>
+      </div>
+      <div class="narr-cell narr-full">
+        <div class="narr-tag grn">Positioning Premise</div>
+        <h3 class="acc">The core thesis I'd build from</h3>
+        <p>Enterprise logistics has always been a decision problem, not a visibility problem. Traditional TMS platforms gave you better dashboards. Agentic TMS gives you better decisions, at machine speed, with human guardrails. <strong>Locus doesn't just show you what's happening. It acts on it.</strong></p>
+        <p style="margin-top:12px;">That's the fundamental shift. And framed that way, legacy platforms can't compete by adding AI features. The architecture is different at the root. Locus needs to own that distinction before SAP and Blue Yonder start using the word "agentic" on their marketing pages.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 02: POSITIONING AUDIT -->
+<section id="audit">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">02 / Positioning Audit</span>
+      <h2 class="s-title">Where the current<br>messaging <span class="a">holds and leaks.</span></h2>
+      <div class="s-rule"></div>
+    </div>
+
+    <div class="reveal">
+      <div class="audit-tabs">
+        <button class="atab on" onclick="switchTab('audit','home')">Homepage</button>
+        <button class="atab" onclick="switchTab('audit','category')">Category Play</button>
+        <button class="atab" onclick="switchTab('audit','social')">Social/Content</button>
+      </div>
+
+      <!-- HOMEPAGE PANEL -->
+      <div class="apanel on" id="audit-home">
+        <div class="audit-wrap">
+          <div class="audit-row">
+            <div class="abox-ok">
+              <div class="abox-lbl grn"><span class="dot dot-grn"></span>Working</div>
+              <h4>The "promises become proof" anchor line</h4>
+              <p>Strong directional statement. Operationally credible. Avoids abstract AI language and speaks to SLA accountability, which is the #1 pain for logistics heads at enterprise scale.</p>
+            </div>
+            <div class="abox-ok">
+              <div class="abox-lbl grn"><span class="dot dot-grn"></span>Working</div>
+              <h4>Proof metrics front and center</h4>
+              <p>The 20% cost reduction and 66% faster planning cycles figures are specific enough to trigger credibility. Most SaaS companies hide numbers like these in case studies.</p>
+            </div>
+          </div>
+          <div class="audit-row">
+            <div class="abox">
+              <div class="abox-lbl red"><span class="dot dot-red"></span>Weak</div>
+              <h4>No clear hero claim for the AI-native transition</h4>
+              <p>"Agentic TMS" appears in the description but isn't anchored to a specific capability story. A first-time buyer doesn't leave understanding what makes Locus architecturally different from a TMS that "uses AI."</p>
+            </div>
+            <div class="abox">
+              <div class="abox-lbl red"><span class="dot dot-red"></span>Weak</div>
+              <h4>The IKEA signal is underleveraged</h4>
+              <p>IKEA runs 500M+ customer deliveries globally. Ingka Group acquiring Locus is a massive proof point for enterprise credibility. It deserves more than a mention. It should anchor the trust narrative.</p>
+            </div>
+          </div>
+          <div class="audit-row">
+            <div class="abox-fix">
+              <div class="abox-lbl acc"><span class="dot dot-acc"></span>Opportunity</div>
+              <h4>Add a "what makes this different" explainer module</h4>
+              <p>A short interactive section explaining: Legacy TMS plans. Agentic TMS decides. Could use the "12M decisions/day" stat as the anchor. Enterprise buyers need to understand why architecture matters, not just outcomes.</p>
+            </div>
+            <div class="abox-fix">
+              <div class="abox-lbl acc"><span class="dot dot-acc"></span>Opportunity</div>
+              <h4>Segment entry points by buyer role</h4>
+              <p>Head of Logistics, VP Supply Chain, and CIO have very different questions on arrival. A role-aware navigation or content branch could increase qualified engagement and accelerate sales conversations.</p>
+            </div>
+          </div>
+          <div class="verdict">
+            <div class="verdict-ic">→</div>
+            <p><strong>Overall verdict:</strong> The homepage reads like a logistics platform that has AI. The goal is to read like an AI platform that runs logistics. That's a meaningful rewrite, not a tweak, and it starts with the hero section and carries through every product description.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORY PANEL -->
+      <div class="apanel" id="audit-category">
+        <div class="audit-wrap">
+          <div class="audit-row">
+            <div class="abox-ok">
+              <div class="abox-lbl grn"><span class="dot dot-grn"></span>Working</div>
+              <h4>Gartner recognition used consistently</h4>
+              <p>Five consecutive years of Gartner recognition is strong third-party validation. It reduces skepticism at first contact and gives procurement teams an easy reference point.</p>
+            </div>
+            <div class="abox-ok">
+              <div class="abox-lbl grn"><span class="dot dot-grn"></span>Working</div>
+              <h4>QKS TMS Leader positioning in 2025</h4>
+              <p>Being named a category leader in the QKS SPARK Matrix for TMS is a defensible claim. It directly supports the "Agentic TMS" category narrative if used in context.</p>
+            </div>
+          </div>
+          <div class="audit-row">
+            <div class="abox">
+              <div class="abox-lbl red"><span class="dot dot-red"></span>Gap</div>
+              <h4>"Agentic TMS" risks becoming empty jargon</h4>
+              <p>The category name is claimed, but the proof of what agentism means operationally is scattered. Buyers need a concrete model: here's a decision that used to require human intervention, here's how Locus handles it autonomously.</p>
+            </div>
+            <div class="abox">
+              <div class="abox-lbl amb"><span class="dot dot-amb"></span>Watch</div>
+              <h4>Competitors will start using "agentic" soon</h4>
+              <p>Blue Yonder and SAP have the resources to rebrand features as "agentic." The window to own the word with proof is now. Needs content moats: detailed explainers, customer stories, technical depth that legacy vendors can't replicate quickly.</p>
+            </div>
+          </div>
+          <div class="verdict">
+            <div class="verdict-ic">→</div>
+            <p><strong>Category play verdict:</strong> Locus is in the right position to own "Agentic TMS." The infrastructure for the claim exists: genuine architecture, real deployments, verified outcomes. The gap is <strong>narrative scaffolding</strong>, the layer between "we are agentic" and "here's specifically what that means for your operation."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOCIAL/CONTENT PANEL -->
+      <div class="apanel" id="audit-social">
+        <div class="audit-wrap">
+          <div class="audit-row">
+            <div class="abox-ok">
+              <div class="abox-lbl grn"><span class="dot dot-grn"></span>Working</div>
+              <h4>Founder-led thought leadership</h4>
+              <p>Nishith Rastogi publishing on logistics strategy and supply chain decision systems gives Locus a credible voice. Founder POV content tends to outperform brand content in B2B at this stage.</p>
+            </div>
+            <div class="abox">
+              <div class="abox-lbl red"><span class="dot dot-red"></span>Gap</div>
+              <h4>Content is informational, not POV-driven</h4>
+              <p>The blog covers TMS comparisons, feature explainers, logistics guides. That generates SEO traffic but doesn't build category conviction. Locus needs content that argues a point, not just explains one.</p>
+            </div>
+          </div>
+          <div class="audit-row">
+            <div class="abox-fix">
+              <div class="abox-lbl acc"><span class="dot dot-acc"></span>Opportunity</div>
+              <h4>Customer data narratives are largely untapped</h4>
+              <p>With 1.5B+ deliveries and 350+ enterprise deployments, Locus has more operational intelligence than any competitor. Turning that data into original research and benchmarks would be defensible, hard to copy, and category-building.</p>
+            </div>
+            <div class="abox-fix">
+              <div class="abox-lbl acc"><span class="dot dot-acc"></span>Opportunity</div>
+              <h4>The "human governance" angle is underdeveloped</h4>
+              <p>One of the most important objections to agentic AI is "what if it's wrong?" Locus has guardrails and human oversight built into the platform. That feature deserves its own content narrative aimed squarely at risk-conscious CIOs.</p>
+            </div>
+          </div>
+          <div class="verdict">
+            <div class="verdict-ic">→</div>
+            <p><strong>Content verdict:</strong> The content strategy should pivot from informational coverage to <strong>original intelligence</strong>. Locus has the deployment data to publish logistics benchmarks no competitor can replicate. That becomes a category-defining content moat.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 03: GTM BRIEF -->
+<section id="gtm">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">03 / GTM Brief</span>
+      <h2 class="s-title">How I'd take the<br><span class="a">Agentic TMS</span> story to market.</h2>
+      <div class="s-rule"></div>
+    </div>
+
+    <div class="gtm-grid reveal">
+      <div class="gtm-card">
+        <div class="narr-tag">Core Narrative</div>
+        <h3>One sentence the company should own</h3>
+        <p><strong>"Your logistics network runs on millions of decisions a day. Locus is the only platform built to make them."</strong></p>
+        <p style="margin-top:12px;">This works because it reframes the buyer's problem (decision volume, not route planning), makes the uniqueness claim structural (not feature-level), and opens the door for proof: 12M decisions/day, 250+ constraints, 99.5% SLA.</p>
+      </div>
+      <div class="gtm-card">
+        <div class="narr-tag">The Foil</div>
+        <h3>What we position against</h3>
+        <p>The category foil isn't Blue Yonder or SAP directly. It's the entire legacy TMS model: <strong>systems that help humans plan better, versus systems that plan and act autonomously.</strong></p>
+        <p style="margin-top:12px;">This framing lets Locus win on architecture, not feature checklist. You can't beat Oracle on breadth. You can beat them on the speed and intelligence of autonomous decisioning.</p>
+      </div>
+    </div>
+
+    <!-- GTM Phases -->
+    <div class="reveal" style="margin-top:24px;">
+      <div class="gtm-card span2">
+        <div class="narr-tag">Launch Phasing</div>
+        <h3>90-day narrative build for the Agentic TMS story</h3>
+        <div class="gtm-phases" style="margin-top:20px;">
+          <div class="ph">
+            <div class="ph-num">01</div>
+            <div class="ph-body">
+              <div class="ph-label">Days 1–30: Foundation</div>
+              <div class="ph-title">Lock the narrative and build the asset stack</div>
+              <div class="ph-text">Rewrite the homepage hero section and product pages around the decision-intelligence frame. Produce a single flagship asset: <strong>"The Agentic TMS Explainer"</strong>, a visual piece that shows a logistics scenario playing out in a traditional TMS vs. Locus. Build a buyer-specific landing page for each of the three personas (Logistics Head, VP SC, CIO). Create internal-facing materials so Sales can start using the new language immediately.</div>
+            </div>
+          </div>
+          <div class="ph">
+            <div class="ph-num">02</div>
+            <div class="ph-body">
+              <div class="ph-label">Days 31–60: Proof Layer</div>
+              <div class="ph-title">Anchor claims with customer stories and data</div>
+              <div class="ph-text">Source two flagship customer stories from different verticals (one FMCG, one retail). Each story should lead with a decision scenario: <strong>here is the specific logistics problem, here is what an agentic decision looks like versus a human-assisted one, here is the outcome.</strong> Produce an original benchmarks report using anonymized platform data: "State of Logistics Decision-Making 2025." Position Locus as the definitive source.</div>
+            </div>
+          </div>
+          <div class="ph">
+            <div class="ph-num">03</div>
+            <div class="ph-body">
+              <div class="ph-label">Days 61–90: Amplification</div>
+              <div class="ph-title">Push the story into market through events, content, and partner channels</div>
+              <div class="ph-text">Take the narrative to supply chain events and trade press. Activate the IKEA/Ingka endorsement in a co-authored piece on logistics transformation. Run a targeted ABM campaign against the top 50 enterprise accounts in retail and FMCG. Build co-marketing angles with the 1,000+ pre-integrated carriers, turning them into distribution partners for Locus content.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gtm-grid reveal" style="margin-top:20px;">
+      <div class="gtm-card">
+        <div class="narr-tag">ICP Prioritization</div>
+        <h3>Where to focus first</h3>
+        <ul>
+          <li><strong>FMCG/CPG enterprises</strong> in Southeast Asia and the Middle East: high delivery density, multi-carrier complexity, proven Locus deployment history</li>
+          <li><strong>Mid-size retail chains</strong> looking to move off legacy TMS platforms ahead of peak season planning cycles</li>
+          <li><strong>3PLs expanding geographically:</strong> they need a system that works across carrier networks and countries without a 12-month implementation</li>
+        </ul>
+      </div>
+      <div class="gtm-card">
+        <div class="narr-tag">Sales Enablement</div>
+        <h3>What the field actually needs</h3>
+        <ul>
+          <li>A one-page "Agentic TMS vs. Legacy TMS" comparison that sales reps can use in discovery calls</li>
+          <li>Vertical-specific ROI calculators with conservative, moderate, and aggressive scenarios</li>
+          <li>An objection handler specifically for "we're already on SAP/Blue Yonder": focus on modular deployment and coexistence, not rip-and-replace</li>
+          <li>A reference story for each major vertical, organized by the buyer's pain first</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: PERSONA SWITCHER -->
+<section id="personas">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">04 / Buyer Personas</span>
+      <h2 class="s-title">Three buyers,<br><span class="a">three conversations.</span></h2>
+      <div class="s-rule"></div>
+      <p class="s-sub">The Locus sale typically involves three distinct decision-makers. Each arrives with a different question. The PMM's job is to make sure Locus answers each one before sales gets in the room.</p>
+    </div>
+
+    <div class="persona-layout reveal">
+      <div class="ptabs">
+        <div class="ptab on" onclick="switchPersona('logistics')">
+          <div class="ptab-role">Head of Logistics</div>
+          <div class="ptab-name">The Operator</div>
+        </div>
+        <div class="ptab" onclick="switchPersona('vp')">
+          <div class="ptab-role">VP Supply Chain</div>
+          <div class="ptab-name">The Strategist</div>
+        </div>
+        <div class="ptab" onclick="switchPersona('cio')">
+          <div class="ptab-role">CIO / IT Leadership</div>
+          <div class="ptab-name">The Risk Owner</div>
+        </div>
+      </div>
+
+      <div class="p-panel">
+        <!-- HEAD OF LOGISTICS -->
+        <div class="p-content on" id="p-logistics">
+          <div class="p-card">
+            <span class="p-role-tag">Head of Logistics / Ops Director</span>
+            <h3 class="p-headline">The person who lives inside the daily exceptions.</h3>
+            <p class="p-body-txt">
+              Their mornings start with: which carrier failed overnight, which SLAs are at risk, which routes need manual replanning. They've seen "AI" tools before and most of them just gave them a better dashboard to manage the same problem. <strong>They don't want to be impressed. They want to not be woken up at 6am.</strong>
+            </p>
+            <div class="p-triggers">
+              <div class="p-trigger">
+                <strong>What they actually ask:</strong><br>
+                "How does this reduce the number of exceptions my team handles manually? And what happens when the system gets it wrong?"
+              </div>
+              <div class="p-trigger">
+                <strong>The message that lands:</strong><br>
+                Locus surfaces risk early and recommends the next best move before the exception becomes a missed SLA. Your team shifts from reactive firefighting to exception oversight. The system handles the 95%, your team calls the 5% that need judgment.
+              </div>
+              <div class="p-trigger">
+                <strong>Proof point to lead with:</strong><br>
+                99.5% SLA adherence ratio across 350+ enterprise deployments. Not pilot conditions. Production scale.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VP SC -->
+        <div class="p-content" id="p-vp">
+          <div class="p-card">
+            <span class="p-role-tag">VP Supply Chain / SVP Logistics</span>
+            <h3 class="p-headline">The executive who's accountable when the network breaks.</h3>
+            <p class="p-body-txt">
+              They're measured on cost, service levels, and strategic flexibility. They're looking at a 3-year planning horizon while also managing quarter-to-quarter pressure. <strong>They want to know if Locus is a tactical tool or a strategic one.</strong> They're thinking about what the network looks like after the transition, not just the software itself.
+            </p>
+            <div class="p-triggers">
+              <div class="p-trigger">
+                <strong>What they actually ask:</strong><br>
+                "Does this reduce our dependency on carrier relationships and manual planning, or does it just make it faster?"
+              </div>
+              <div class="p-trigger">
+                <strong>The message that lands:</strong><br>
+                Locus unifies orders, capacity, and carrier networks into a single living plan. Over time, the platform learns your network's patterns and starts recommending structural changes, not just tactical optimizations.
+              </div>
+              <div class="p-trigger">
+                <strong>Proof point to lead with:</strong><br>
+                $320M in verified transit cost savings and 20% average cost reduction. Frame it as network ROI, not per-route savings.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CIO -->
+        <div class="p-content" id="p-cio">
+          <div class="p-card">
+            <span class="p-role-tag">CIO / VP Technology</span>
+            <h3 class="p-headline">The person who will be blamed if the AI makes a bad call.</h3>
+            <p class="p-body-txt">
+              They've approved a lot of AI implementations that didn't survive contact with production. They want to know: is this a black box, can it coexist with SAP/Oracle, what does the failure mode look like, and <strong>who's accountable when it goes wrong?</strong> They're not against AI. They're against uncontrolled AI.
+            </p>
+            <div class="p-triggers">
+              <div class="p-trigger">
+                <strong>What they actually ask:</strong><br>
+                "What are the human guardrails? Does this require ripping out existing systems?"
+              </div>
+              <div class="p-trigger">
+                <strong>The message that lands:</strong><br>
+                Locus runs with embedded human governance: AI co-pilots with guardrails, not replacements. The system flags decisions for human review when confidence is below threshold. API-first architecture with pre-built connectors for SAP, Oracle, and Microsoft means no rip-and-replace.
+              </div>
+              <div class="p-trigger">
+                <strong>Proof point to lead with:</strong><br>
+                Battle-tested in 350+ deployments across 30+ countries. Ingka Group (IKEA) chose Locus as the infrastructure for their global delivery operation. If it's good enough for IKEA's compliance requirements, it's good enough for yours.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 05: COPY VAULT -->
+<section id="copy">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">05 / Copy Vault</span>
+      <h2 class="s-title">Sample messaging<br><span class="a">in the Locus voice.</span></h2>
+      <div class="s-rule"></div>
+    </div>
+
+    <div class="reveal">
+      <div class="copy-tabs">
+        <button class="ctab on" onclick="switchCopy('web')">Website Hero</button>
+        <button class="ctab" onclick="switchCopy('email')">Outbound Email</button>
+        <button class="ctab" onclick="switchCopy('brief')">Sales Brief</button>
+      </div>
+
+      <!-- WEBSITE HERO -->
+      <div class="cpanel on" id="copy-web">
+        <div class="copy-block">
+          <div class="copy-cbadge cbadge-web">Website / Hero Section</div>
+          <div class="copy-box">
+            <p><strong style="font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,52px);font-weight:400;letter-spacing:0.03em;line-height:1.1;display:block;margin-bottom:16px;">Your logistics network<br>runs on decisions.<br>12 million a day.</strong></p>
+            <p style="font-size:15px;color:var(--w2);line-height:1.78;margin-bottom:12px;">Locus is the only Agentic TMS built to make them autonomously, with guardrails your ops teams can trust. Planning, execution, and settlement in one living plan.</p>
+            <p style="font-size:14px;color:var(--w3);">Battle-tested in 350+ enterprise deployments · $320M in verified cost savings · Backed by Ingka Group (IKEA)</p>
+          </div>
+          <div class="copy-why">
+            <strong>Why this works:</strong> Anchors on a specific, verifiable number (12M decisions) rather than a capability claim. Preempts the governance objection with "guardrails your ops teams can trust." Layers the IKEA credibility at the bottom where it reinforces rather than leads.
+          </div>
+        </div>
+      </div>
+
+      <!-- OUTBOUND EMAIL -->
+      <div class="cpanel" id="copy-email">
+        <div class="copy-block">
+          <div class="copy-cbadge cbadge-email">Outbound / ABM Email</div>
+          <div class="copy-box">
+            <div class="email-head">
+              <strong>To:</strong> [VP Supply Chain, retail enterprise] &nbsp;|&nbsp; <strong>Subject:</strong> How Unilever cut logistics costs 20% without changing carriers
+            </div>
+            <p>[Name],</p>
+            <br>
+            <p>Most TMS conversations start with "better visibility." Yours probably should start with a different question: how many of your logistics decisions still require a human to execute them?</p>
+            <br>
+            <p>We work with supply chain teams at Unilever, Nestlé, and Siam Makro. The consistent pattern: the biggest cost reduction doesn't come from optimizing individual routes. It comes from removing the decision latency that piles up across thousands of daily exceptions.</p>
+            <br>
+            <p>Locus makes 12 million automated decisions a day across dispatch, routing, carrier allocation, and exception management. With human guardrails at every escalation threshold.</p>
+            <br>
+            <p>Worth 20 minutes to walk through how this works in a network like yours?</p>
+            <br>
+            <p>[Name]<br>Locus</p>
+          </div>
+          <div class="copy-why">
+            <strong>Why this works:</strong> Opens with reframing (visibility vs. decision latency), uses named customer references as social proof without requiring specific data, makes the ask specific and low-friction. Avoids generic "AI-powered logistics" language throughout.
+          </div>
+        </div>
+      </div>
+
+      <!-- SALES BRIEF -->
+      <div class="cpanel" id="copy-brief">
+        <div class="copy-block">
+          <div class="copy-cbadge cbadge-sales">Sales Enablement / Discovery Brief</div>
+          <div class="copy-box">
+            <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--w3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:16px;">Discovery call framing: The Decision Audit</p>
+
+            <p style="margin-bottom:12px;"><strong>Opening question:</strong> "On a typical day, how many logistics decisions does your team make that could theoretically be automated?"</p>
+
+            <p style="margin-bottom:12px;">[Wait for number. Most ops leaders underestimate by 10x.]</p>
+
+            <p style="margin-bottom:12px;"><strong>Follow-up:</strong> "The enterprises we work with typically have between 50,000 and 500,000 such decisions per day: routing exceptions, carrier allocation, SLA risk flags, dispatch adjustments. Most of them are being made manually or not at all. What does that cost you in delayed responses and SLA misses?"</p>
+
+            <p style="margin-bottom:12px;"><strong>Pivot to Locus:</strong> "What Locus does is take that decision load off your team systematically. Not by giving you a better dashboard to make the decisions yourself. By making the decisions autonomously, with clear escalation rules for the edge cases that need a human."</p>
+
+            <p><strong>Objection handling (SAP/Blue Yonder):</strong> "We don't require replacing anything. Locus runs alongside your existing ERP and WMS through pre-built connectors. The way most customers start is picking one decision category, carrier allocation is common, running Locus on it for 60 days, and measuring the delta before expanding scope."</p>
+          </div>
+          <div class="copy-why">
+            <strong>Why this works:</strong> The "Decision Audit" framing turns discovery into a diagnostic exercise the buyer finds genuinely useful. It surfaces their actual problem, creates a quantification anchor, and positions Locus as the solution before the product demo even starts.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 06: BATTLECARD -->
+<section id="battlecard">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">06 / Competitive Battlecard</span>
+      <h2 class="s-title">When sales is in the room<br>with <span class="a">Blue Yonder or SAP.</span></h2>
+      <div class="s-rule"></div>
+      <p class="s-sub">The biggest competitive threat isn't losing a deal to a better product. It's losing it to "we'll extend our existing SAP investment." The battlecard needs to address inertia as much as features.</p>
+    </div>
+
+    <div class="reveal">
+      <!-- Desktop table -->
+      <div class="bc-header">
+        <div class="bc-h">Area</div>
+        <div class="bc-h them">Blue Yonder / SAP TM</div>
+        <div class="bc-h us">Locus</div>
+      </div>
+      <div class="bc-rows">
+        <div class="bc-row">
+          <div class="bc-cell topic">Architecture origin</div>
+          <div class="bc-cell bad">Freight planning platforms extended with AI features. Transportation capabilities came via acquisition, not original design.</div>
+          <div class="bc-cell good">Purpose-built for AI-native decision-making. Routing, dispatch, and carrier logic designed from the ground up for autonomous execution.</div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-cell topic">Implementation timeline</div>
+          <div class="bc-cell bad">Typically 12–18 months for full deployment. High professional services multiple. IT-intensive integration work.</div>
+          <div class="bc-cell good">Modular, API-first deployment. Pre-built connectors for SAP, Oracle, Microsoft. Start with one use case, expand without re-integration.</div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-cell topic">Decision intelligence</div>
+          <div class="bc-cell bad">Helps humans plan better. Dashboards, recommendations, reporting. Human-in-the-loop for execution.</div>
+          <div class="bc-cell good">12M+ automated decisions per day. Autonomous dispatch, carrier allocation, and SLA management. Human override at every threshold.</div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-cell topic">Real-world proof</div>
+          <div class="bc-cell bad">Strong in planning-heavy industries. Execution-layer depth varies by module. TCO often 3x license over 3 years.</div>
+          <div class="bc-cell good">350+ deployments across 30+ countries. $320M verified savings. 99.5% SLA adherence. Ingka Group (IKEA) production scale.</div>
+        </div>
+        <div class="bc-row">
+          <div class="bc-cell topic">The inertia objection</div>
+          <div class="bc-cell bad">"We're already invested in SAP/Blue Yonder. Switching costs are too high."</div>
+          <div class="bc-cell good">Locus runs alongside existing ERP/WMS. Not a replacement, a decision layer on top. Coexistence is the default deployment model.</div>
+        </div>
+      </div>
+
+      <!-- Mobile version -->
+      <div class="bc-mobile">
+        <div class="bc-mob-row">
+          <div class="bc-mob-topic">Architecture origin</div>
+          <div class="bc-mob-grid">
+            <div class="bc-mob-col"><div class="bc-mob-lbl them">Blue Yonder / SAP</div><div class="bc-mob-val bad">Freight planning extended with AI. Transportation came via acquisition.</div></div>
+            <div class="bc-mob-col"><div class="bc-mob-lbl us">Locus</div><div class="bc-mob-val good">Purpose-built AI-native platform. Autonomous decisioning by design.</div></div>
+          </div>
+        </div>
+        <div class="bc-mob-row">
+          <div class="bc-mob-topic">Implementation</div>
+          <div class="bc-mob-grid">
+            <div class="bc-mob-col"><div class="bc-mob-lbl them">Blue Yonder / SAP</div><div class="bc-mob-val bad">12–18 months. High services cost. IT-intensive.</div></div>
+            <div class="bc-mob-col"><div class="bc-mob-lbl us">Locus</div><div class="bc-mob-val good">Modular, API-first. Pre-built connectors. Start one use case, expand.</div></div>
+          </div>
+        </div>
+        <div class="bc-mob-row">
+          <div class="bc-mob-topic">Decision intelligence</div>
+          <div class="bc-mob-grid">
+            <div class="bc-mob-col"><div class="bc-mob-lbl them">Blue Yonder / SAP</div><div class="bc-mob-val bad">Better dashboards. Human-in-the-loop execution.</div></div>
+            <div class="bc-mob-col"><div class="bc-mob-lbl us">Locus</div><div class="bc-mob-val good">12M+ automated decisions/day. Human override at every threshold.</div></div>
+          </div>
+        </div>
+        <div class="bc-mob-row">
+          <div class="bc-mob-topic">The inertia objection</div>
+          <div class="bc-mob-grid">
+            <div class="bc-mob-col"><div class="bc-mob-lbl them">Them</div><div class="bc-mob-val bad">"Already invested. Switching costs too high."</div></div>
+            <div class="bc-mob-col"><div class="bc-mob-lbl us">Counter</div><div class="bc-mob-val good">Locus runs alongside existing stack. Not a replacement.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 07: OTHER WORK -->
+<section id="work">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="s-num">07 / Other Relevant Work</span>
+      <h2 class="s-title">Selected<br><span class="a">PoW projects.</span></h2>
+      <div class="s-rule"></div>
+    </div>
+
+    <div class="work-grid reveal">
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Locad/" target="_blank">
+        <div class="wcard-tag">Logistics · Southeast Asia</div>
+        <h4>Locad</h4>
+        <p>GTM strategy and messaging architecture for a logistics and fulfillment platform. Supply chain positioning, ICP mapping, and category narrative for Southeast Asia expansion.</p>
+        <span class="wcard-arr">↗</span>
+      </a>
+      <a class="wcard" href="https://bhanuexcalibur.github.io/RevolutBusiness/" target="_blank">
+        <div class="wcard-tag">Fintech · Enterprise</div>
+        <h4>Revolut Business</h4>
+        <p>Positioning and product marketing strategy for Revolut's B2B product. Competitive differentiation, persona development, and launch narrative for the business banking suite.</p>
+        <span class="wcard-arr">↗</span>
+      </a>
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Shippo/" target="_blank">
+        <div class="wcard-tag">Logistics · Developer Platform</div>
+        <h4>Shippo</h4>
+        <p>Product marketing strategy for a multi-carrier shipping API platform. Category positioning, developer messaging, and GTM brief for enterprise tier expansion.</p>
+        <span class="wcard-arr">↗</span>
+      </a>
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Canonical/" target="_blank">
+        <div class="wcard-tag">Enterprise · Open Source</div>
+        <h4>Canonical</h4>
+        <p>Messaging architecture and positioning work for Ubuntu's enterprise products. Translating open-source value into enterprise security and compliance narratives.</p>
+        <span class="wcard-arr">↗</span>
+      </a>
+      <a class="wcard" href="https://bhanuexcalibur.github.io/Deltek/" target="_blank">
+        <div class="wcard-tag">B2B SaaS · Professional Services</div>
+        <h4>Deltek</h4>
+        <p>GTM strategy and launch framework for a professional services automation platform. Persona mapping, sales enablement content, and competitive positioning for mid-market expansion.</p>
+        <span class="wcard-arr">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNATURE -->
+<div class="wrap">
+  <div class="sig">
+    <div class="sig-left">
+      <h2>Bhanu Kumar</h2>
+      <p>Product Marketing · Bengaluru</p>
+    </div>
+    <div class="sig-links">
+      <a class="slink" href="https://drive.google.com/file/d/1EJiU-EBOTcqAeIWRUUYy0Y5uw57KQtI9/view" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Resume
+      </a>
+      <a class="slink" href="https://www.linkedin.com/in/bhanuexcalibur/" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span>Bhanu Kumar · Proof of Work · Locus</span>
+    <span>All data verified from public sources. <a href="#narrative">Back to top ↑</a></span>
+  </div>
+</div>
+
+<script>
+// Reading bar
+const rbar = document.getElementById('rbar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  rbar.style.width = (window.scrollY / h * 100) + '%';
+});
+
+// Hamburger
+const hbg = document.getElementById('hbg');
+const mob = document.getElementById('mob-menu');
+hbg.addEventListener('click', () => {
+  hbg.classList.toggle('open');
+  mob.classList.toggle('open');
+});
+function closeMob() {
+  hbg.classList.remove('open');
+  mob.classList.remove('open');
+}
+
+// Generic tab switcher
+function switchTab(group, id) {
+  document.querySelectorAll('.apanel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.atab').forEach(t => t.classList.remove('on'));
+  const panel = document.getElementById(group + '-' + id);
+  if (panel) panel.classList.add('on');
+  event.target.classList.add('on');
+}
+
+// Copy tabs
+function switchCopy(id) {
+  document.querySelectorAll('.cpanel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('on'));
+  document.getElementById('copy-' + id).classList.add('on');
+  event.target.classList.add('on');
+}
+
+// Persona switcher
+function switchPersona(id) {
+  document.querySelectorAll('.p-content').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
+  document.getElementById('p-' + id).classList.add('on');
+  event.currentTarget.classList.add('on');
+}
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08 });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
